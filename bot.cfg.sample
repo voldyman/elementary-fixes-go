@@ -1,0 +1,7 @@
+[Bot]
+Frequency = 10s
+[Twitter]
+ConsumerKey = 
+ConsumerSecret = 
+AccessTokenKey = 
+AccessTokenSecret = 
