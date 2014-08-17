@@ -24,7 +24,7 @@ func main() {
 
 	twitterClient := getTwitterClient(cfg)
 
-	lastChecked := time.Date(2012, time.November, 10, 10, 0, 0, 0, time.UTC)
+	lastChecked := time.Now()
 
 	for {
 		bugs, err := GetBugs(lastChecked)
@@ -41,7 +41,6 @@ func main() {
 			if entry.Status == "Fix Released" || entry.Status == "Fix Committed" {
 
 				tweet(twitterClient, createTweet(entry.Title, entry.Assignee, usernames))
-				fmt.Println(entry.Assignee)
 
 				fmt.Println("Tweeted about bug " + entry.Title)
 			}
