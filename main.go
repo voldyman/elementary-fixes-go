@@ -24,7 +24,7 @@ func main() {
 
 	twitterClient := getTwitterClient(cfg)
 
-	lastChecked := time.Now()
+	lastChecked := time.Date(2012, time.November, 10, 10, 0, 0, 0, time.UTC)
 
 	for {
 		bugs, err := GetBugs(lastChecked)
@@ -32,10 +32,16 @@ func main() {
 			fmt.Println(err)
 			continue
 		}
+		usernames, err := fetchUsernames()
+		if err != nil {
+			fmt.Println(err)
+		}
 
 		for entry := range bugs.Iter() {
 			if entry.Status == "Fix Released" || entry.Status == "Fix Committed" {
-				tweet(twitterClient, createTweet(entry.Title, entry.Assignee))
+
+				tweet(twitterClient, createTweet(entry.Title, entry.Assignee, usernames))
+				fmt.Println(entry.Assignee)
 
 				fmt.Println("Tweeted about bug " + entry.Title)
 			}
@@ -64,14 +70,26 @@ func tweet(api *ana.TwitterApi, tweetStr string) {
 	api.PostTweet(tweetStr, params)
 }
 
-func createTweet(bugTitle, bugAssignee string) string {
+func createTweet(bugTitle, bugAssignee string, usernames map[string]string) string {
 	bugDesc := strings.Replace(bugTitle, "Bug #", "pad.lv/", 1)
 
+	firstHalf := ""
 	if bugAssignee == "elementary Devs" {
-		return "We fixed bug " + bugDesc
+		firstHalf = "We fixed bug "
 	} else {
-		return "pad.lv/~" + bugAssignee + " fixed bug " + bugDesc
+		uname := usernameTransform(bugAssignee, usernames)
+		firstHalf = uname + " fixed bug "
 	}
+	return firstHalf + bugDesc
+}
+
+func usernameTransform(username string, twitterHandles map[string]string) string {
+	if twitterHandles != nil {
+		if val, ok := twitterHandles[username]; ok {
+			return getRandomEmoji() + val
+		}
+	}
+	return "pad.lv/~" + username
 }
 
 func floattostr(input_num float64) string {
