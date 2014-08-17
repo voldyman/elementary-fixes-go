@@ -20,7 +20,8 @@ func getEmojis() []string {
 		"\xE2\x99\xA0",     //â
 		"\xE2\x9A\xA1",     //â¡
 		"\xE2\xAD\x90",     //­
-		"\xF0\x9F\x8D\x95", //ð
+		"\xF0\x9F\x8D\x95", //🍕
+        "\xF0\x9F\x8D\x97", //🍗
 	}
 
 	return emojis
