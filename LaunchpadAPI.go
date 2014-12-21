@@ -48,6 +48,7 @@ type Entry struct {
 	URL      string
 	Assignee string
 	Status   string
+	FixDate  time.Time
 }
 
 func GetBugs(date time.Time) (APIResponse, error) {
@@ -169,6 +170,17 @@ func parseEntries(entriesArray []interface{}) (entries []Entry, err error) {
 		}
 
 		entry.Status, _ = entryMap["status"].(string)
+
+		dateStr, ok := entryMap["date_fix_committed"].(string)
+		if ok {
+			entry.FixDate, _ = time.Parse("2006-01-02T15:04:5-07:00", dateStr)
+		} else {
+			dateStr, ok := entryMap["date_fix_released"].(string)
+			if ok {
+				entry.FixDate, _ = time.Parse("2006-01-02T15:04:5-07:00", dateStr)
+			}
+		}
+
 		entries[i] = entry
 	}
 	return

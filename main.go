@@ -40,9 +40,11 @@ func main() {
 		for entry := range bugs.Iter() {
 			if entry.Status == "Fix Released" || entry.Status == "Fix Committed" {
 
-				tweet(twitterClient, createTweet(entry.Title, entry.Assignee, usernames))
+				if (entry.FixDate.After(lastChecked)) {
+					tweet(twitterClient, createTweet(entry.Title, entry.Assignee, usernames))
 
-				fmt.Println("Tweeted about bug " + entry.Title)
+					fmt.Println("Tweeted about bug " + entry.Title)
+				}
 			}
 		}
 
