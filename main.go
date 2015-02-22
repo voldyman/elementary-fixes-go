@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	ana "github.com/ChimeraCoder/anaconda"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	ana "github.com/ChimeraCoder/anaconda"
 )
 
 func main() {
@@ -40,7 +41,7 @@ func main() {
 		for entry := range bugs.Iter() {
 			if entry.Status == "Fix Released" || entry.Status == "Fix Committed" {
 
-				if (entry.FixDate.After(lastChecked)) {
+				if entry.FixDate.After(lastChecked) {
 					tweet(twitterClient, createTweet(entry.Title, entry.Assignee, usernames))
 
 					fmt.Println("Tweeted about bug " + entry.Title)
